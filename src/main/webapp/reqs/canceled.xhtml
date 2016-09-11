@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layouts/default.xhtml">
+	<ui:define name="title">Anulados | APPCYS</ui:define>
+	<ui:define name="content">
+	<h:form>
+		<h:outputText value="Anulados" style="font-size:24px"/>
+		<p:separator/>
+    <p:dataTable value="#{canceledBean.reqs}" 
+    						 var="req" 
+    						 emptyMessage="No hay datos que mostrar."
+    						 rows="20"
+    						 sortOrder="DESCENDING"
+    						 rowIndexVar="i"
+    						 paginator="true"
+    						 paginatorPosition="top"
+    						 rowsPerPageTemplate="20,50,100"
+    						 selection="#{canceledBean.req}"
+    						 rowKey="#{req.id}"
+    						 selectionMode="single">
+    	<p:column headerText="Nro" styleClass="adjust">
+    		<h:outputText value="#{req.id}"/>
+    	</p:column>
+    	<p:column headerText="Estado" styleClass="left adjust">
+    		<h:outputText value="#{req.estado.nombre}"/>
+    	</p:column>
+    	<p:column headerText="Area" styleClass="left adjust">
+    		<h:outputText value="#{req.area.nombre}"/>
+    	</p:column>
+    	<p:column headerText="Asunto" styleClass="left">
+    		<h:outputText value="#{req.asunto}"/>
+    	</p:column>
+    	<p:column headerText="Fecha" styleClass="right adjust">
+    		<h:outputText value="#{req.fecha}">
+    			<f:convertDateTime pattern="dd/MM/yyyy"/>
+    		</h:outputText>
+    	</p:column>
+    </p:dataTable>
+	</h:form>
+	</ui:define>
+</ui:composition>
+</html>

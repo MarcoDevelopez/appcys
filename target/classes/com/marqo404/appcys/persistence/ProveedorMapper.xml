@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.marqo404.appcys.persistence.ProveedorMapper">
+
+	<select id="list" resultMap="proveedorMap">
+    {CALL GetProveedorList()}
+  </select>
+	
+  <resultMap type="Proveedor" id="proveedorMap">
+    <id column="ProveedorId" property="id"/>
+    <result column="RazonSocial" property="razonSocial"/>
+    <result column="Direccion" property="direccion"/>
+    <result column="RUC" property="ruc"/>
+    <result column="Telefono" property="telefono"/>
+    <result column="Contacto" property="contacto"/>
+    <result column="Email" property="email"/>
+    <result column="FormaPago" property="formaPago"/>
+    <result column="Disponibilidad" property="disponibilidad"/>
+    <result column="Garantia" property="garantia"/>
+    <result column="Otros" property="otros"/>
+  </resultMap>
+	
+</mapper>

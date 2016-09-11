@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.marqo404.appcys.persistence.UsuarioMapper">
+
+	<!-- metodos para agregar los participantes de los requerimientos -->
+	<insert id="saveParticipante" statementType="CALLABLE"
+		parameterType="Usuario">
+		{CALL SaveParticipante(#{reqId}, #{usuarioId})}
+	</insert>
+
+	<select id="getListByAreaId" resultMap="usuarioMap">
+		{CALL
+		GetUsuariosByAreaId(#{areaId})}
+	</select>
+	
+	<select id="getByUsername" resultMap="usuarioMap">
+		{CALL GetUsuarioByUsuario(#{username})}
+	</select>
+
+	<select id="getUsuarioByUsuarioContrasena" resultMap="usuarioMap">
+		{CALL GetUsuarioByUsuarioContrasena(#{usuario}, #{contrasena})}
+	</select>
+
+	<resultMap type="Usuario" id="usuarioMap">
+		<id column="UsuarioId" property="id" />
+		<result column="Nombres" property="nombres" />
+		<result column="Apellidos" property="apellidos" />
+		<result column="Direccion" property="direccion" />
+		<result column="Telefono" property="telefono" />
+		<result column="Celular" property="celular" />
+		<result column="FechaNacimiento" property="fechaNacimiento" />
+		<result column="Email" property="email" />
+		<result column="Usuario" property="usuario" />
+		<result column="Contrasena" property="contrasena" />
+		<result column="CuentaActivada" property="cuentaActivada" />
+		<result column="CuentaExpirada" property="cuentaExpirada" />
+		<result column="ContrasenaExpirada" property="contrasenaExpirada" />
+		<result column="CuentaBloqueda" property="cuentaBloqueada" />
+		<result column="Activacion" property="activacion" />
+		<result column="Perfil" property="perfil" />
+		<result column="CambiaDestino" property="cambiaDestino" />
+		<result column="NecesitaVb" property="necesitaVb" />
+		<result column="RecibeNotificacion" property="recibeNotificacion" />
+
+		<result column="AreaId" property="area.id" />
+		<result column="ANombre" property="area.nombre" />
+		<result column="JefeId" property="area.jefe.id" />
+		<result column="JNombres" property="area.jefe.nombres" />
+		<result column="JApellidos" property="area.jefe.apellidos" />
+
+		<result column="SubAreaId" property="subArea.id" />
+		<result column="SANombre" property="subArea.nombre" />
+		<result column="JSANombres" property="subArea.jefe.nombres" />
+		<result column="JSAApellidos" property="subArea.jefe.apellidos" />
+
+		<result column="CargoId" property="cargo.id" />
+		<result column="CNombre" property="cargo.nombre" />
+		<result column="InmediatoId" property="inmediato.id" />
+		<result column="IEmail" property="inmediato.email" />
+	</resultMap>
+
+</mapper>

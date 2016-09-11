@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.marqo404.appcys.persistence.RequerimientoArchivoMapper">
+
+	<insert id="save" statementType="CALLABLE" parameterType="RequerimientoArchivo">
+		{CALL SaveRequerimientoArchivo(
+			#{nombre},
+			#{nombreServer},
+			#{req.id},
+			#{tipo.id},
+			#{id, jdbcType=INTEGER, mode=INOUT}
+		)}
+	</insert>
+
+	<update id="update">
+		{CALL UpdateRequerimientoArchivo(
+			#{nombre},
+			#{nombreServer},
+			#{req.id},
+			#{tipo.id},
+			#{id, jdbcType=INTEGER, mode=INOUT}
+		)}
+	</update>
+
+	<delete id="deleteByReqId">
+		{CALL DeleteRequerimientoArchivoByRequerimientoId(#{reqId})}
+	</delete>
+
+	<select id="getListByReqId" resultMap="requerimientoArchivoMap">
+		{CALL GetRequerimientoArchivosByRequerimientoId(#{reqId})}
+	</select>
+
+	<resultMap type="RequerimientoArchivo" id="requerimientoArchivoMap">
+		<id column="RequerimientoArchivoId" property="id" />
+		<result column="Nombre" property="nombre" />
+		<result column="NombreServer" property="nombreServer" />
+		<result column="RequerimientoId" property="req.id" />
+		<result column="TipoArchivoId" property="tipo.id" />
+		<result column="Descripcion" property="tipo.descripcion" />
+	</resultMap>
+	
+</mapper>

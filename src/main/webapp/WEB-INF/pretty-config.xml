@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces" 
+  						 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  						 xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      						 http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+	<rewrite trailingSlash="remove" redirect="301" />
+
+	<url-mapping id="received">
+		<pattern value="/recibidos" />
+		<view-id value="/faces/reqs/received.xhtml" />
+	</url-mapping>
+	<url-mapping id="sent">
+		<pattern value="/enviados" />
+		<view-id value="/faces/reqs/sent.xhtml" />
+	</url-mapping>
+	<url-mapping id="approved">
+		<pattern value="/aprobados" />
+		<view-id value="/faces/reqs/approved.xhtml" />
+	</url-mapping>
+	<url-mapping id="closed">
+		<pattern value="/cerrados" />
+		<view-id value="/faces/reqs/closed.xhtml" />
+	</url-mapping>
+	<url-mapping id="canceled">
+		<pattern value="/anulados" />
+		<view-id value="/faces/reqs/canceled.xhtml" />
+	</url-mapping>
+	<url-mapping id="all">
+		<pattern value="/todos" />
+		<view-id value="/faces/reqs/all.xhtml" />
+	</url-mapping>
+	<url-mapping id="providers">
+		<pattern value="/proveedores" />
+		<view-id value="/faces/providers.xhtml" />
+	</url-mapping>
+	<url-mapping id="search">
+		<pattern value="/buscar/#{searchBean.q}" />
+		<view-id value="/faces/reqs/search.xhtml" />
+		<action>#{searchBean.search}</action>
+	</url-mapping>
+
+</pretty-config>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.marqo404.appcys.persistence.RequerimientoMapper">
+
+	<insert id="save" statementType="CALLABLE" parameterType="Requerimiento">
+		{CALL SaveRequerimiento(
+			#{fecha},
+			#{area.id},
+			#{subArea.id},
+			#{solicitante.id},
+			#{asunto},
+			#{fechaRequerida},
+			#{prioridad},
+			#{areaDestino.id},
+			#{subAreaDestino.id},
+			#{tipoCompra},
+			#{tipoPago},
+			#{responsable},
+			#{banco.id},
+			#{cuenta},
+			#{otros},
+			#{sustento},
+			#{observaciones},
+			#{estado.id},
+			#{evaluador.id},
+			#{proveedor.id},
+			#{garantia},
+			#{fechaCompra},
+			#{fechaEntregaArea},
+			#{compraMenor},
+			#{editable},
+			#{id, jdbcType=INTEGER, mode=INOUT}
+		)}
+	</insert>
+
+	<update id="update">
+		{CALL UpdateRequerimiento(
+			#{fecha},
+			#{area.id},
+			#{subArea.id},
+			#{solicitante.id},
+			#{asunto},
+			#{fechaRequerida},
+			#{prioridad},
+			#{areaDestino.id},
+			#{subAreaDestino.id},
+			#{tipoCompra},
+			#{tipoPago},
+			#{responsable},
+			#{banco.id},
+			#{cuenta},
+			#{otros},
+			#{sustento},
+			#{observaciones},
+			#{estado.id},
+			#{evaluador.id},
+			#{fechaDefinida},
+			#{fechaEntrega},
+			#{editable},
+			#{completador.id},
+			#{proveedor.id},
+			#{garantia},
+			#{fechaCompra},
+			#{fechaEntregaArea},
+			#{nroRecibo},
+			#{id}
+		)}
+	</update>
+  
+	<select id="getById" resultMap="requerimientoMap">
+		{CALL GetRequerimientoById(#{id})}
+	</select>
+	
+	<select id="getListByUsuarioIdEstadoId" resultMap="requerimientoMap">
+		{CALL GetRequerimientosByUsuarioIdAndEstadoId(#{usuarioId}, #{estadoId})}
+	</select>
+	
+	<select id="getListByEvaluadorId" resultMap="requerimientoMap">
+		{CALL GetRequerimientosByEvaluadorId(#{evaluadorId})}
+	</select>
+	
+	<select id="getListBySolicitanteId" resultMap="requerimientoMap">
+		{CALL GetRequerimientosBySolicitanteId(#{solicitanteId})}
+	</select>
+	
+	<select id="getListByUsuarioIdAndQuery" resultMap="requerimientoMap">
+		{CALL GetRequerimientosByUsuarioIdAndQuery(#{usuarioId}, #{query})}
+	</select>
+	
+	<resultMap type="Requerimiento" id="requerimientoMap">
+		<id column="RequerimientoId" property="id" />
+		<result column="Fecha" property="fecha" />
+		<result column="AreaId" property="area.id" />
+		<result column="ANombre" property="area.nombre" />
+		<result column="JANombres" property="area.jefe.nombres" />
+		<result column="JAApellidos" property="area.jefe.apellidos" />
+		<result column="SubAreaId" property="subArea.id" />
+		<result column="SANombre" property="subArea.nombre" />
+		<result column="SAApellidos" property="subArea.apellidos" />
+		<result column="JSANombres" property="subArea.jefe.nombres" />
+		<result column="JSAApellidos" property="subArea.jefe.apellidos" />
+		<result column="SolicitanteId" property="solicitante.id" />
+		<result column="Nombres" property="solicitante.nombres" />
+		<result column="Apellidos" property="solicitante.apellidos" />
+		<result column="Asunto" property="asunto" />
+		<result column="FechaRequerida" property="fechaRequerida" />
+		<result column="Prioridad" property="prioridad" />
+		<result column="AreaDestinoId" property="areaDestino.id" />
+		<result column="ADNombre" property="areaDestino.nombre" />
+		<result column="SubAreaDestinoId" property="subAreaDestino.id" />
+		<result column="SADNombre" property="subAreaDestino.nombre" />
+		<result column="TipoCompra" property="tipoCompra" />
+		<result column="TipoPago" property="tipoPago" />
+		<result column="Responsable" property="responsable" />
+		<result column="BancoId" property="banco.id" />
+		<result column="BNombre" property="banco.nombre" />
+		<result column="Cuenta" property="cuenta" />
+		<result column="Otros" property="otros" />
+		<result column="Sustento" property="sustento" />
+		<result column="Observaciones" property="observaciones" />
+		<result column="EstadoId" property="estado.id" />
+		<result column="RENombre" property="estado.nombre" />
+		<result column="EvaluadorId" property="evaluador.id" />
+		<result column="ENombres" property="evaluador.nombres" />
+		<result column="EApellidos" property="evaluador.apellidos" />
+		<result column="FechaDefinida" property="fechaDefinida" />
+		<result column="FechaEntrega" property="fechaEntrega" />
+		<result column="Editable" property="editable" />
+		<result column="CompletadorId" property="completador.id" />
+		<result column="ProveedorId" property="proveedor.id" />
+		<result column="RazonSocial" property="proveedor.razonSocial" />
+		<result column="Direccion" property="proveedor.direccion" />
+		<result column="RUC" property="proveedor.ruc" />
+		<result column="Telefono" property="proveedor.telefono" />
+		<result column="Contacto" property="proveedor.contacto" />
+		<result column="Email" property="proveedor.email" />
+		<result column="FormaPago" property="proveedor.formaPago" />
+		<result column="Disponibilidad" property="proveedor.disponibilidad" />
+		<result column="Garantia" property="garantia" />
+		<result column="FechaCompra" property="fechaCompra" />
+		<result column="FechaEntregaArea" property="fechaEntregaArea" />
+		<result column="POtros" property="proveedor.otros" />
+		<result column="CompraMenor" property="compraMenor" />
+		<result column="NroRecibo" property="nroRecibo" />
+	</resultMap>
+	
+</mapper>

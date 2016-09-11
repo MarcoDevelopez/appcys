@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title><ui:insert name="title">APPCYS</ui:insert></title>
+  <h:outputStylesheet name="appcys.css" library="css"/>
+  <h:outputScript name="DialogReposition.js" library="js" />
+</h:head>
+<h:body>
+
+<ui:insert name="header">
+
+	<p:growl id="masterGrowl" widgetVar="masterGrowl" globalOnly="true" life="10000" sticky="true"/>
+
+	<div id="header">
+		<div class="container">
+	    <div class="logo">
+	    	<a href="#{request.contextPath}/">
+		    	<h:panelGrid columns="2" cellspacing="5">
+		    		<h:column>
+				    	<img src="#{facesContext.externalContext.requestContextPath}/resources/img/acb2.png"/>
+			    	</h:column>
+			    	<p:outputPanel>
+		    			<h:outputText value="APPCYS" style="font-size: 22px!important"/>
+		    			<br/>
+		    			<h:outputText value="COMPRAS Y SERVICIOS" style="font-size: 12px!important"/>
+			    	</p:outputPanel>
+		    	</h:panelGrid>
+	    	</a>
+	    </div>
+	    <div class="user-details">
+    		<div class="container-profile-photo">
+    			<p:outputPanel id="profilePhotoPanel">
+		    		<p:outputPanel id="usuario" style="cursor:pointer">
+		    			<img src="#{facesContext.externalContext.requestContextPath}/resources/img/photo.png" height="40" width="40"/>
+		    		</p:outputPanel>
+	    		</p:outputPanel>
+    		</div>
+				<p:overlayPanel for="usuario" style="right:10px!important">
+					<h:form>
+						<div class="dialog-triangle-photo"/>
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:column>
+								<p:commandLink>
+									<img src="#{facesContext.externalContext.requestContextPath}/resources/img/photo.png" style="width:96px;heigth:96px;"/>
+								</p:commandLink>
+							</h:column>
+							<h:column>
+								<h:outputText value="#{loginBean.usuario.nombres} #{loginBean.usuario.apellidos}" styleClass="bold"/>
+									<br/>
+									<h:outputText value="#{loginBean.usuario.email}"/>
+									<br/>
+									<h:outputText value="#{loginBean.usuario.area.nombre}"/>
+									<br/>
+									<h:outputText value="#{loginBean.usuario.cargo.nombre}"/>
+							</h:column>
+						</h:panelGrid>
+						<p:separator/>
+						<h:panelGrid columns="2" cellspacing="10" columnClasses="left,right" width="100%">
+							<p:commandButton value="Cambiar Contraseña" styleClass="white-button" style="padding:2px!important"/>
+							<p:commandButton value="Salir" action="#{loginBean.logout}" ajax="false" styleClass="white-button" style="padding:2px!important"/>
+						</h:panelGrid>
+					</h:form>
+				</p:overlayPanel>
+				<h:form id="configurationForm">
+					<p:dialog widgetVar="configurationDialog" header="Configuración" resizable="false" width="700" modal="true" closeOnEscape="true">
+							<p:tabView id="configurationTabView">
+								<p:tab title="Datos Generales">
+									<h:outputText value="En construcción"/>
+								</p:tab>
+								<p:tab title="Usuarios del Área">
+									<h:panelGrid columns="4" cellspacing="10" columnClasses="left">
+										<p:outputLabel value="Área" styleClass="bold"/>
+										<p:outputLabel value="#{loginBean.usuario.area.nombre}"/>
+										<p:outputLabel value="Jefe Encargado" styleClass="bold"/>
+										<p:outputLabel value="#{loginBean.usuario.area.jefe.nombres} #{loginBean.usuario.area.jefe.apellidos}"/>
+									</h:panelGrid>
+									<h:panelGrid width="100%" cellspacing="10">
+										<p:dataTable id="usuarioAreaTable"
+																 value="#{defaultBean.usuariosArea}"
+																 var="ua"
+																 emptyMessage="No hay datos que mostrar.">
+											<p:column headerText="Nombre">
+												<h:outputText value="#{ua.nombres} #{ua.apellidos}"/>
+											</p:column>
+											<p:column headerText="Email">
+												<h:outputText value="#{ua.email}"/>
+											</p:column>
+											<p:column headerText="Cargo">
+												<h:outputText value="#{ua.cargo.nombre}"/>
+											</p:column>
+											<p:column styleClass="adjust">
+												<f:facet name="header">
+													<p:commandButton id="vb"
+																				 	 value="VB"
+															  				 	 title="Activalo para que los Reqs. de esta persona tengan antes el V°B° del Jefe de Área."
+															  				 	 styleClass="white-button"/>
+													<pe:tooltip for="vb" myPosition="bottom center" atPosition="top center" showDelay="0" hideDelay="0"/>
+												</f:facet>
+												<p:selectBooleanCheckbox value="#{ua.necesitaVb}" rendered="#{ua.id!=ua.area.jefe.id}"/>
+											</p:column>
+											<p:column styleClass="adjust">
+												<f:facet name="header">
+													<p:commandButton id="noti"
+																				 	 icon="ui-icon-mail-closed"
+															  				 	 title="Activalo para que esta persona reciba las mismas notificaciones que el Jefe de Área."
+															  				 	 styleClass="white-button"/>
+													<pe:tooltip for="noti" myPosition="bottom center" atPosition="top center" showDelay="0" hideDelay="0"/>
+												</f:facet>
+												<p:selectBooleanCheckbox value="#{ua.recibeNotificacion}" disabled="#{ua.id==ua.area.jefe.id}"/>
+											</p:column>
+										</p:dataTable>
+									</h:panelGrid>
+								</p:tab>
+							</p:tabView>
+						<p:separator/>
+						<br/>
+						<p:outputPanel>
+							<p:commandButton value="GUARDAR" styleClass="blue-button" style="padding:4px!important"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="Cerrar"
+															 icon="ui-icon-close" 
+															 type="button" 
+															 onclick="PF('configurationDialog').hide();" 
+															 styleClass="white-button" style="padding:4px!important"/>
+						</p:outputPanel>
+					</p:dialog>
+				</h:form>
+	    </div>
+	    <div class="search">
+	    	<h:form id="searchForm">
+	    		<span class="button-group">
+	    			<p:inputText value="#{searchBean.q}" size="50" style="font-size:15px!important;padding:7px;"/>
+	    			<p:commandButton action="pretty:search"
+	    											 icon="fa fa-search"
+	    											 styleClass="blue-button" 
+	    											 style="height:34px;width:44px;position:absolute;margin-left:-3px;"/>
+    			</span>
+	    	</h:form>
+	    </div>
+	  </div>
+	</div>
+	
+</ui:insert>
+
+<p:outputPanel id="outputPanelContent">
+	<h:panelGrid columns="2" width="100%" columnClasses="adjust top, top" style="margin-bottom:30px!important;">
+		<h:column>
+			<ui:insert name="sidebar">
+				<h:form id="menuForm">
+					<div>
+						<h:panelGrid cellspacing="10">
+							<p:commandButton value="NUEVO REQUERIMIENTO"
+														 	 oncomplete="PF('addReqDialog').show();" 
+														 	 icon="fa fa-plus"
+														 	 update=":addReqForm"
+														 	 action="#{requerimientoBean.addReq}" 
+														 	 styleClass="green-button"
+														 	 process="@this"
+														 	 style="padding:2px;margin-left:5px;"/>
+							<p:menu id="menu" style="border: none!important;width:185px;">
+								<p:menuitem value="Recibidos" 
+														action="#{loginBean.redirect('received')}" 
+														icon="#{view.viewId=='/reqs/received.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/reqs/received.xhtml'?'bold':''}"/>
+								<p:menuitem value="Enviados" 
+														action="#{loginBean.redirect('sent')}" 
+														icon="#{view.viewId=='/reqs/sent.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/reqs/sent.xhtml'?'bold':''}"/>
+								<p:menuitem value="Aprobados" 
+														action="#{loginBean.redirect('approved')}" 
+														icon="#{view.viewId=='/reqs/approved.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/reqs/approved.xhtml'?'bold':''}"/>
+								<p:menuitem value="Cerrados" 
+														action="#{loginBean.redirect('closed')}" 
+														icon="#{view.viewId=='/reqs/closed.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/reqs/closed.xhtml'?'bold':''}"/>
+								<p:menuitem value="Anulados" 
+														action="#{loginBean.redirect('canceled')}" 
+														icon="#{view.viewId=='/reqs/canceled.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/reqs/canceled.xhtml'?'bold':''}"/>
+								<p:menuitem value="Todos" 
+														action="#{loginBean.redirect('all')}" 
+														icon="#{view.viewId=='/reqs/all.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/reqs/all.xhtml'?'bold':''}"/>
+								<p:separator/>
+								<p:menuitem value="Proveedores" 
+														action="#{loginBean.redirect('providers')}" 
+														icon="#{view.viewId=='/providers.xhtml'?'ui-icon-triangle-1-e':'ui-icon-blank'}"
+														styleClass="#{view.viewId=='/providers.xhtml'?'bold':''}"/>
+							</p:menu>
+						</h:panelGrid>
+					</div>
+				</h:form>
+			</ui:insert>
+		</h:column>
+		<h:panelGrid cellspacing="10" width="100%" style="min-width: 780px;">
+			<ui:insert name="content">
+			</ui:insert>
+		</h:panelGrid>
+	</h:panelGrid>
+</p:outputPanel>
+
+
+<div id="bottombar" class="bottombar">
+	<div class="bottombar-left">
+		<span class="gray-text">APPCYS v1.0</span>
+	</div>
+	<div class="bottombar-right">
+	</div>
+</div>
+
+<!--Nuevo Requerimiento Normal -->
+<h:form id="addReqForm">
+	<p:dialog widgetVar="addReqDialog" header="Nuevo Requerimiento" resizable="false" width="850" modal="true">
+		<p:outputPanel id="addReqOutputPanel">
+			<h:panelGrid>
+				<p:outputLabel for="asunto" value="Asunto" styleClass="bold"/>
+				<p:inputTextarea id="asunto" value="#{requerimientoBean.req.asunto}" cols="127" rows="1" required="true"/>
+			</h:panelGrid>
+			<h:panelGrid columns="4">
+				<p:outputLabel for="fecha" value="Fecha Requerida" styleClass="bold"/>
+				<p:spacer/>
+				<p:outputLabel for="prioridad" value="Prioridad" styleClass="bold"/>
+				<p:spacer/>
+				<p:calendar id="fecha" value="#{requerimientoBean.req.fechaRequerida}" pattern="dd/MM/yyyy" mask="99/99/9999" navigator="true" required="true" size="14"/>
+				<p:spacer width="15"/>
+				<p:selectOneMenu id="prioridad" value="#{requerimientoBean.req.prioridad}" required="true">
+					<f:selectItem itemLabel="Baja" itemValue="Baja"/>
+					<f:selectItem itemLabel="Media" itemValue="Media"/>
+					<f:selectItem itemLabel="Alta" itemValue="Alta"/>
+				</p:selectOneMenu>
+			</h:panelGrid>
+			<h:panelGrid width="100%">
+				<h:outputText value="Detalles" styleClass="bold"/>
+				<p:dataTable id="detallesTable"
+										 value="#{requerimientoBean.detalles}"
+										 var="d"
+										 emptyMessage="No hay datos que mostrar"
+										 rowIndexVar="i"
+										 style="margin-bottom: 8px;">
+					<p:column headerText="#" styleClass="adjust">
+						<h:outputText value="#{i+1}"/>
+					</p:column>
+					<p:column headerText="Cantidad" styleClass="adjust">
+						<h:outputText value="#{d.cantidad}"/>
+					</p:column>
+					<p:column headerText="Descripción" styleClass="left">
+						<h:outputText value="#{d.descripcion}"/>
+					</p:column>
+					<p:column headerText="P.Unitario" styleClass="adjust right">
+						<h:outputText value="#{d.moneda.equalsIgnoreCase('soles') ? 'S/.' : '$'}" />
+	          <h:outputText value="#{d.precioUnitario}">
+	            <f:convertNumber pattern="#,###,##0.00" locale="en_US"/>
+	          </h:outputText>
+					</p:column>
+					<p:column headerText="Modalidad" styleClass="adjust">
+						<h:outputText value="#{d.modalidad}"/>
+					</p:column>
+					<p:column headerText="Total S/." styleClass="adjust right">
+						<h:outputText value="#{d.moneda.equalsIgnoreCase('soles') ? d.cantidad * d.precioUnitario : 0}">
+	            <f:convertNumber pattern="#,###,##0.00" locale="en_US"/>
+	          </h:outputText>
+					</p:column>
+					<p:column headerText="Total $" styleClass="adjust right">
+						<h:outputText value="#{(not d.moneda.equalsIgnoreCase('soles')) ? d.cantidad * d.precioUnitario : 0}">
+	            <f:convertNumber pattern="#,###,##0.00" locale="en_US"/>
+	          </h:outputText>
+					</p:column>
+					<p:column styleClass="adjust">
+						<f:facet name="header">
+							<p:commandButton title="Agregar"
+															 action="#{requerimientoBean.addDetalle}" 
+															 update=":addDetalleForm" 
+															 oncomplete="PF('addDetalleDialog').show();" 
+															 icon="fa fa-plus" 
+															 styleClass="green-button"
+															 process="@this"/>
+						</f:facet>
+						<p:commandButton title="Editar" 
+														 update=":addDetalleForm" 
+														 oncomplete="PF('addDetalleDialog').show();" 
+														 icon="fa fa-pencil" 
+														 styleClass="blue-button" 
+														 process="@this">
+							<f:setPropertyActionListener target="#{requerimientoBean.detalle}" value="#{d}"/>
+							<f:setPropertyActionListener target="#{requerimientoBean.detalleIndex}" value="#{i}"/>
+						</p:commandButton>
+						<p:commandButton title="Eliminar" 
+														 update="detallesTable" 
+														 action="#{requerimientoBean.removeDetalle}" 
+														 process="@this" 
+														 icon="fa fa-trash" 
+														 styleClass="red-button">
+							<f:setPropertyActionListener target="#{requerimientoBean.detalleIndex}" value="#{i}"/>
+						</p:commandButton>
+					</p:column>
+					<p:columnGroup type="footer">
+		        <p:row>
+	            <p:column colspan="5" styleClass="right bold" footerText="Totales:"/>
+	            <p:column styleClass="bold right">
+	            	<f:facet name="footer">
+	                <h:outputText value="S/." />
+	                <h:outputText value="#{requerimientoBean.totalSoles}">
+	                  <f:convertNumber pattern="#,###,##0.00" locale="en_US"/>
+	                </h:outputText>
+	              </f:facet>
+	            </p:column>
+	            <p:column styleClass="bold right">
+	            	<f:facet name="footer">
+	                <h:outputText value="$" />
+	                <h:outputText value="#{requerimientoBean.totalDolares}">
+	                  <f:convertNumber pattern="#,###,##0.00" locale="en_US"/>
+	                </h:outputText>
+	              </f:facet>
+	            </p:column>
+	            <p:column/>
+		        </p:row>
+	        </p:columnGroup>
+				</p:dataTable>
+				<p:outputLabel value="Adjuntos" styleClass="bold"/>
+				<p:dataTable id="archivosTable"
+										 value="#{requerimientoBean.archivos}"
+										 var="a"
+										 emptyMessage="No hay datos que mostrar"
+										 rowIndexVar="i"
+										 style="margin-bottom: 8px;">
+					<p:column headerText="#" styleClass="adjust">
+						<h:outputText value="#{i+1}"/>
+					</p:column>
+					<p:column headerText="Nombre" styleClass="left">
+						<h:outputText value="#{a.nombre}"/>
+					</p:column>
+					<p:column headerText="Tipo" styleClass="left">
+						<h:outputText value="#{a.tipo.descripcion}"/>
+					</p:column>
+					<p:column styleClass="adjust">
+						<f:facet name="header">
+							<p:commandButton title="Agregar"
+															 action="#{requerimientoBean.addArchivo}"
+															 update=":uploadForm" 
+															 oncomplete="PF('uploadDialog').show();"
+															 icon="fa fa-plus" 
+															 styleClass="green-button"
+															 process="@this"/>
+						</f:facet>
+						<p:commandButton title="Eliminar" 
+														 action="#{requerimientoBean.removeArchivo}"
+														 update="archivosTable" 
+														 icon="fa fa-trash" 
+														 styleClass="red-button"
+														 process="@this">
+							<f:setPropertyActionListener target="#{requerimientoBean.archivoIndex}" value="#{i}"/>
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+				<p:outputLabel for="sustento" value="Sustento de Inversión" styleClass="bold"/>
+				<p:inputTextarea id="sustento" value="#{requerimientoBean.req.sustento}" rows="4" cols="127" required="true"/>
+			</h:panelGrid>
+			<p:separator/>
+			<br/>
+			<p:outputPanel>
+				<p:commandButton value="GENERAR" 
+												 action="#{requerimientoBean.generar}"
+												 update="addReqOutputPanel, :masterGrowl" 
+												 styleClass="blue-button" 
+												 style="padding:4px!important"/>
+				<p:spacer width="10"/>
+				<p:commandButton value="Cancelar" 
+												 type="button" 
+												 onclick="PF('addReqDialog').hide();" 
+												 styleClass="red-button" 
+												 style="padding:4px!important"/>
+			</p:outputPanel>
+		</p:outputPanel>
+	</p:dialog>
+</h:form>
+
+<!-- Agrega Detalle al Requerimiento Normal -->
+<h:form id="addDetalleForm">
+	<p:dialog widgetVar="addDetalleDialog" closeOnEscape="true" resizable="false" modal="true" header="Detalle" width="400">
+		<h:panelGrid id="addDetallePanel" cellspacing="5">
+			<p:outputLabel for="cantidad" value="Cantidad" styleClass="bold"/>
+			<p:inputText id="cantidad" value="#{requerimientoBean.detalle.cantidad}" required="true"/>
+			<p:outputLabel for="pu" value="Precio Unitario" styleClass="bold"/>
+			<h:panelGrid columns="2">
+				<p:inputText id="pu" value="#{requerimientoBean.detalle.precioUnitario}"/>
+				<p:selectOneMenu value="#{requerimientoBean.detalle.moneda}">
+					<f:selectItem itemLabel="Soles (S/.)" itemValue="Soles"/>
+					<f:selectItem itemLabel="Dolares ($)" itemValue="Dolares"/>
+				</p:selectOneMenu>
+			</h:panelGrid>
+			<p:outputLabel value="Modalidad" styleClass="bold"/>
+			<p:selectOneRadio value="#{requerimientoBean.detalle.modalidad}">
+				<f:selectItem itemLabel="&#160;Producto" itemValue="Producto"/>
+				<f:selectItem itemLabel="&#160;Servicio" itemValue="Servicio"/>
+				<f:selectItem itemLabel="&#160;Producto/Servicio" itemValue="Producto/Servicio"/>
+			</p:selectOneRadio>
+			<p:outputLabel for="descripcion" value="Descripción" styleClass="bold"/>
+			<p:inputTextarea id="descripcion" value="#{requerimientoBean.detalle.descripcion}" required="true" cols="49"/>
+		</h:panelGrid>
+		<br/>
+		<p:outputPanel>
+			<p:commandButton value="Guardar" 
+											 action="#{requerimientoBean.saveDetalle}" 
+											 update="addDetallePanel,:addReqForm:detallesTable" 
+											 icon="fa fa-check" 
+											 styleClass="green-button"/>
+			<p:spacer width="5"/>
+			<p:commandButton value="Cerrar" 
+											 type="button" 
+											 onclick="PF('addDetalleDialog').hide();" 
+											 icon="fa fa-close" 
+											 styleClass="white-button"/>
+		</p:outputPanel>
+	</p:dialog>
+</h:form>
+
+<!-- Agregar Archivo al Requerimiento Normal -->
+<h:form id="uploadForm">
+	<p:dialog widgetVar="uploadDialog" header="Agregar Adjunto" closeOnEscape="true" resizable="false" modal="true" width="400">
+		<h:panelGrid width="100%">
+	    <p:fileUpload fileUploadListener="#{requerimientoBean.upload}"
+	                  mode="advanced"
+	                  label="Buscar"
+	                  auto="true"
+	                  multiple="true"
+	                  invalidFileMessage="Archivo inválido."
+	                  allowTypes="/(\.|\/)(doc|docx|xls|xlsx|ppt|pptx|jpe?g|pdf|gif|png|txt|rtf|csv)$/"
+	                  update="outputPanel, cmdPanelGrid" />
+	    <p:outputPanel id="outputPanel">
+	      <h:panelGrid columns="2" cellspacing="10" rendered="#{requerimientoBean.archivo.nombre != null}">
+	        <h:outputText value="Nombre" styleClass="bold" />
+	        <h:outputText value="#{requerimientoBean.archivo.nombre}" />
+	        <p:outputLabel for="tipo" value="Tipo de Adjunto" styleClass="bold" />
+	        <p:selectOneMenu id="tipo" value="#{requerimientoBean.archivo.tipo}" converter="omnifaces.SelectItemsConverter" required="false">
+	          <f:selectItem itemLabel="Seleccionar" itemValue="#{null}" />
+	          <f:selectItems value="#{requerimientoBean.tipos}" var="ta" itemLabel="#{ta.descripcion}" itemValue="#{ta}"/>
+	        </p:selectOneMenu>
+	      </h:panelGrid>
+	    </p:outputPanel>
+	  </h:panelGrid>
+	  <p:separator />
+	  <br/>
+    <p:outputPanel id="cmdPanelGrid">
+      <p:commandButton value="Guardar"
+      								 icon="fa fa-check"
+                       action="#{requerimientoBean.saveArchivo}" 
+                       update=":uploadForm:outputPanel, :addReqForm:archivosTable" 
+                       styleClass="green-button"
+                       rendered="#{requerimientoBean.archivo.nombre != null}"/>
+      <p:spacer width="10"/>
+      <p:commandButton value="Cerrar" icon="fa fa-close" type="button" onclick="PF('uploadDialog').hide();" styleClass="white-button" />
+    </p:outputPanel>
+	</p:dialog>
+</h:form>
+
+<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+<p:dialog id="statusDialog" widgetVar="statusDialog" resizable="false" showHeader="false" position="top" styleClass="my-ui-dialog">
+		<h:outputText value="Cargando..." styleClass="bold" style="padding-top: 5px;float:left"/>
+</p:dialog>
+</h:body>
+</html>

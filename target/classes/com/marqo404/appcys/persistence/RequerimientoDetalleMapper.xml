@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.marqo404.appcys.persistence.RequerimientoDetalleMapper">
+
+	<insert id="save" statementType="CALLABLE" parameterType="RequerimientoDetalle">
+		{CALL SaveRequerimientoDetalle(
+			#{cantidad},
+			#{descripcion},
+			#{precioUnitario},
+			#{moneda},
+			#{modalidad},
+			#{req.id},
+			#{id, jdbcType=INTEGER, mode=INOUT}
+		)}
+	</insert>
+
+	<delete id="deleteByReqId">
+		{CALL DeleteRequerimientoDetalleByRequerimientoId(#{reqId})}
+	</delete>
+
+	<select id="getListByReqId" resultMap="detalleMap">
+		{CALL GetRequerimientoDetallesByRequerimientoId(#{reqId})}
+	</select>
+
+	<resultMap type="RequerimientoDetalle" id="detalleMap">
+		<id column="RequerimientoDetalleId" property="id" />
+		<result column="Cantidad" property="cantidad" />
+		<result column="Descripcion" property="descripcion" />
+		<result column="PrecioUnitario" property="precioUnitario" />
+		<result column="Moneda" property="moneda" />
+		<result column="Modalidad" property="modalidad" />
+		<result column="RequerimientoId" property="req.id" />
+	</resultMap>
+	
+</mapper>

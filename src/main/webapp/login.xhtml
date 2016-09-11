@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <title>Login | APPCYS</title>
+  <h:outputStylesheet name="appcys.css" library="css"/>
+  <style>
+  	.login-box {
+  		position: relative;
+  		left: 50%;
+  		margin-left: -210px;
+  		width: 420px;
+  		padding: 20px;
+  		text-align: center;
+  		margin-top: 5%;
+  		background-color: #fff;
+  	}
+  	.login-form {
+  		border: solid 1px #e8e5e5;
+  		border-radius: 4px !important;
+  		padding: 10px;
+  		margin-top: 30px;
+  	}
+  	#loginForm .form {
+  		margin-top: 10px;
+  	}
+  	#loginForm .form tr td:first-child {
+		    text-align: right;
+		}
+		.login-button {
+			width: 92%;
+		}
+		.login-link {
+			color: #2895F1;
+			font-size: 10px;
+			text-decoration: none;
+		}
+		.login-link:hover {
+			color: #2895F1;
+			font-size: 10px;
+			text-decoration: underline;
+		}
+  </style>
+</h:head>
+<h:body>
+	<h:panelGrid columns="1" cellpadding="15" styleClass="login-box">
+		<h:column>
+			<a href="#{facesContext.externalContext.requestContextPath}/">
+				<h:graphicImage value="/resources/img/acb.png" style="margin-bottom: 20px;" />
+			</a>
+		</h:column>
+		<h:column>
+			<h:form id="loginForm">
+				<p:panel>
+					<p:focus for="username"/>
+					<h:panelGrid cellpadding="5">
+						<h:panelGrid styleClass="form" cellspacing="15" columns="2">
+							<p:outputPanel>
+								<label for="username"> Email </label>
+							</p:outputPanel>
+							<p:outputPanel>
+								<p:inputText id="username"
+														 value="#{loginBean.email}" 
+														 size="35" 
+														 tabindex="1"/>
+							</p:outputPanel>
+							<p:outputPanel>
+								<label for="password"> Contraseña </label>
+							</p:outputPanel>
+							<p:outputPanel>
+								<p:password id="password"
+														value="#{loginBean.contrasena}" 
+														size="35" 
+														tabindex="2"/>
+							</p:outputPanel>
+						</h:panelGrid>
+						<p:outputPanel>
+							<p:commandButton id="cmd"
+															 update="mensaje"
+															 ajax="false"
+															 value="Ingresar"
+															 action="#{loginBean.login}"
+															 styleClass="blue-button login-button"
+															 tabindex="4"/>
+						</p:outputPanel>
+						<p:outputPanel>
+							<p:messages id="mensaje" showIcon="false"/>
+						</p:outputPanel>
+					</h:panelGrid>
+					<br/>
+					<p:outputPanel style="margin-bottom: 20px">
+						<a href="#{facesContext.externalContext.requestContextPath}/recuperar" style="color: #3297fd!important;">¿Olvidé mi contraseña?</a>
+						<p:defaultCommand target="cmd"/>
+					</p:outputPanel>
+				</p:panel>
+			</h:form>
+		</h:column>
+	</h:panelGrid>
+	<p:outputPanel styleClass="center">
+		APPCYS 1.0 - Aplicación para Compras y Servicios
+	</p:outputPanel>
+</h:body>
+</html>
